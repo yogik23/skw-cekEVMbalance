@@ -1,0 +1,16 @@
+{
+  "name": "EVM-balance-checker",
+  "version": "1.0.0",
+  "description": "Cek saldo ETH di jaringan Sepolia atau Lainnya",
+  "main": "main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^6.13.5"
+  }
+}
