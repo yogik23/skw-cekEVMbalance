@@ -1,7 +1,7 @@
 {
   "name": "EVM-balance-checker",
   "version": "1.0.0",
-  "description": "Cek saldo ETH di jaringan Sepolia atau Lainnya",
+  "description": "Cek saldo EVM ",
   "main": "main.js",
   "type": "commonjs",
   "scripts": {
@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ethers": "^6.13.5"
+    "ethers": "^6.13.5",
+    "axios": "^1.8.3",
+    "chalk": "^3.0.0"
   }
 }
