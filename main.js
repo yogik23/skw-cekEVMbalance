@@ -14,6 +14,10 @@ const networks = {
     symbol: 'ETH',
     rpcUrl: 'https://arb1.arbitrum.io/rpc',
   },
+  BASE: {
+    symbol: 'ETH',
+    rpcUrl: 'https://mainnet.base.org',
+  },
   BSC: {
     symbol: 'BNB',
     rpcUrl: 'https://binance.llamarpc.com',
@@ -22,13 +26,93 @@ const networks = {
     symbol: 'POL',
     rpcUrl: 'https://polygon-rpc.com/',
   },
-  BASE: {
+  OPTIMISM: {
     symbol: 'ETH',
-    rpcUrl: 'https://mainnet.base.org',
+    rpcUrl: 'https://mainnet.optimism.io',
+  },
+  ZKSYNC: {
+    symbol: 'ETH',
+    rpcUrl: 'https://mainnet.era.zksync.io',
+  },
+  BERA: {
+    symbol: 'BERA',
+    rpcUrl: 'https://rpc.berachain.com',
+  },
+  FANTOM: {
+    symbol: 'FTM',
+    rpcUrl: 'https://fantom-rpc.publicnode.com',
+  },
+  SONIC: {
+    symbol: 'S',
+    rpcUrl: 'https://sonic.drpc.org',
+  },
+  CORE: {
+    symbol: 'CORE',
+    rpcUrl: 'https://core.drpc.org',
+  },
+  HYPERLIQUID: {
+    symbol: 'HYPE',
+    rpcUrl: 'https://rpc.hyperliquid.xyz/evm',
+  },
+  ZIRCUIT: {
+    symbol: 'ETH',
+    rpcUrl: 'https://mainnet.zircuit.com',
+  },
+  CRONOS: {
+    symbol: 'CRO',
+    rpcUrl: 'https://cronos.drpc.org',
+  },
+  UNICHAIN: {
+    symbol: 'ETH',
+    rpcUrl: 'https://unichain-rpc.publicnode.com',
+  },
+  LINEA: {
+    symbol: 'ETH',
+    rpcUrl: 'https://linea-rpc.publicnode.com',
+  },
+  PULSE: {
+    symbol: 'PLS',
+    rpcUrl: 'https://pulsechain-rpc.publicnode.com',
+  },
+  BLAST: {
+    symbol: 'ETH',
+    rpcUrl: 'https://blast-rpc.publicnode.com',
+  },
+  SCROLL: {
+    symbol: 'ETH',
+    rpcUrl: 'https://scroll-rpc.publicnode.com',
+  },
+  SYSCOIN: {
+    symbol: 'SYS',
+    rpcUrl: 'https://syscoin-evm.publicnode.com',
+  },
+  LENS: {
+    symbol: 'GHO',
+    rpcUrl: 'https://rpc.lens.xyz',
+  },
+  VANA: {
+    symbol: 'VANA',
+    rpcUrl: 'https://rpc.vana.org',
+  },
+  MANTLE: {
+    symbol: 'MNT',
+    rpcUrl: 'https://rpc.mantle.xyz',
+  },
+  ARTELA: {
+    symbol: 'ART',
+    rpcUrl: 'https://node-euro.artela.network/rpc',
   },
   AVALANCHE: {
     symbol: 'AVAX',
     rpcUrl: 'https://avalanche-c-chain-rpc.publicnode.com',
+  },
+  HEMI: {
+    symbol: 'ETH',
+    rpcUrl: 'https://rpc.hemi.network/rpc',
+  },
+  zkEVM: {
+    symbol: 'ETH',
+    rpcUrl: 'https://zkevm-rpc.com',
   },
 };
 
@@ -37,7 +121,7 @@ async function askNetworkChoice() {
     {
       type: 'list',
       name: 'network',
-      message: 'Pilih jaringan yang ingin digunakan:',
+      message: 'Gunakan ⬆️ ⬇️ untuk memilih ( Semua jaringan Mainnet ):',
       choices: Object.keys(networks),
     },
   ]);
@@ -69,18 +153,20 @@ async function cekBalance() {
     let totalBalance = ethers.parseEther('0');
     let totalUSD = 0;
 
+    console.log();
     for (const address of addresses) {
       try {
         const balance = await provider.getBalance(address);
         const saldoCoin = parseFloat(ethers.formatEther(balance));
         const nilaiUSD = saldoCoin * hargaUSD;
+        const shortaddress = `${address.slice(0, 4)}...${address.slice(-4)}`;
 
-        console.log(chalk.hex('#00CED1')(`${address}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
+        console.log(chalk.hex('#00CED1')(`${shortaddress}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
 
         totalBalance += balance;
         totalUSD += nilaiUSD;
       } catch (err) {
-        console.log(`❌ Gagal cek saldo ${address}: ${err.message}`);
+        console.log(`❌ Gagal cek saldo ${shortaddress}: ${err.message}`);
       }
     }
 
@@ -93,4 +179,5 @@ async function cekBalance() {
     console.log(`❌ Gagal membaca file atau koneksi RPC: ${err.message}`);
   }
 }
+
 cekBalance();
