@@ -159,14 +159,13 @@ async function cekBalance() {
         const balance = await provider.getBalance(address);
         const saldoCoin = parseFloat(ethers.formatEther(balance));
         const nilaiUSD = saldoCoin * hargaUSD;
-        const shortaddress = `${address.slice(0, 4)}...${address.slice(-4)}`;
 
-        console.log(chalk.hex('#00CED1')(`${shortaddress}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
+        console.log(chalk.hex('#00CED1')(`${address}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
 
         totalBalance += balance;
         totalUSD += nilaiUSD;
       } catch (err) {
-        console.log(`❌ Gagal cek saldo ${shortaddress}: ${err.message}`);
+        console.log(`❌ Gagal cek saldo ${address}: ${err.message}`);
       }
     }
 
