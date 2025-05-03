@@ -128,15 +128,36 @@ async function askNetworkChoice() {
   return networks[answers.network];
 }
 
+async function askAddressFile() {
+  const answers = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'addressFile',
+      message: 'Gunakan ⬆️ ⬇️ untuk memilih (Pilih file address) :',
+      choices: [
+        { name: 'address.txt', value: 'address.txt' },
+        { name: 'secondaddress.txt', value: 'secondaddress.txt' },
+        { name: 'antisybil.txt', value: 'antisybil.txt' },
+      ],
+    },
+  ]);
+  return answers.addressFile;
+}
+
 async function cekBalance() {
   console.clear();
   try {
     const selectedNetwork = await askNetworkChoice();
+    const addressFile = await askAddressFile();
     const provider = new ethers.JsonRpcProvider(selectedNetwork.rpcUrl);
-    const addresses = fs.readFileSync(path.join(__dirname, 'address.txt'), 'utf-8')
+    const addresses = fs.readFileSync(path.join(__dirname, addressFile), 'utf-8')
       .split('\n')
       .map(line => line.trim())
-      .filter(line => line.length > 0);
+      .filter(line => line.length > 0)
+      .map(line => {
+        const [name, address] = line.split(',');
+        return { name: name.trim(), address: address.trim() };
+      });
 
     const CMC_API_KEY = '41cde24f-9803-4d8d-9cbb-2f932374d372';
     const response = await axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest', {
@@ -159,13 +180,14 @@ async function cekBalance() {
         const balance = await provider.getBalance(address);
         const saldoCoin = parseFloat(ethers.formatEther(balance));
         const nilaiUSD = saldoCoin * hargaUSD;
+        const shortaddress = `${address.slice(0, 4)}...${address.slice(-4)}`;
 
-        console.log(chalk.hex('#00CED1')(`${address}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
+        console.log(chalk.hex('#00CED1')(`${shortaddress}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
 
         totalBalance += balance;
         totalUSD += nilaiUSD;
       } catch (err) {
-        console.log(`❌ Gagal cek saldo ${address}: ${err.message}`);
+        console.log(`❌ Gagal cek saldo ${shortaddress}: ${err.message}`);
       }
     }
 
