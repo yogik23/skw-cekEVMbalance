@@ -78,38 +78,27 @@ async function cekBalance() {
       .split('\n')
       .map(line => line.trim())
       .filter(line => line.length > 0)
-      .map(line => {
-        const [name, address] = line.split(',');
-        return { name: name.trim(), address: address.trim() };
+      .map((line, index) => {
+        if (line.includes(',')) {
+          const [name, address] = line.split(',');
+          return { name: name.trim(), address: address.trim() };
+        } else {
+          return { name: `Wallet${index + 1}`, address: line };
+        }
       });
 
-    const CMC_API_KEY = '41cde24f-9803-4d8d-9cbb-2f932374d372';
-    const response = await axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest', {
-      headers: {
-        'X-CMC_PRO_API_KEY': CMC_API_KEY,
-      },
-      params: {
-        symbol: selectedNetwork.symbol,
-        convert: 'USD',
-      },
-    });
-    const hargaUSD = response.data.data[selectedNetwork.symbol].quote.USD.price;
-
     let totalBalance = ethers.parseEther('0');
-    let totalUSD = 0;
 
     console.log();
     for (const entry of addresses) {
       try {
         const balance = await provider.getBalance(entry.address);
         const saldoCoin = parseFloat(ethers.formatEther(balance));
-        const nilaiUSD = saldoCoin * hargaUSD;
         const shortaddress = `${entry.address.slice(0, 4)}...${entry.address.slice(-4)}`;
 
-        console.log(chalk.hex('#00CED1')(`${entry.name.padEnd(10)} ${shortaddress}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol}  $${nilaiUSD.toFixed(2)}`));
+        console.log(chalk.hex('#00CED1')(`${entry.name.padEnd(10)} ${shortaddress}  ${saldoCoin.toFixed(4)} ${selectedNetwork.symbol} `));
 
         totalBalance += balance;
-        totalUSD += nilaiUSD;
       } catch (err) {
         console.log(`❌ Gagal cek saldo ${entry.name}: ${err.message}`);
       }
@@ -117,7 +106,6 @@ async function cekBalance() {
 
     console.log(chalk.hex('#00CED1')("\n==============================="));
     console.log(chalk.hex('#00CED1')(`💰 Total saldo: ${parseFloat(ethers.formatEther(totalBalance)).toFixed(4)} ${selectedNetwork.symbol}`));
-    console.log(chalk.hex('#00CED1')(`💵 Estimasi nilai: $${totalUSD.toFixed(2)}`));
     console.log(chalk.hex('#00CED1')("==============================="));
 
   } catch (err) {
