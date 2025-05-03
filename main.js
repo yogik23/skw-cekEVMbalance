@@ -154,9 +154,13 @@ async function cekBalance() {
       .split('\n')
       .map(line => line.trim())
       .filter(line => line.length > 0)
-      .map(line => {
-        const [name, address] = line.split(',');
-        return { name: name.trim(), address: address.trim() };
+      .map((line, index) => {
+        if (line.includes(',')) {
+          const [name, address] = line.split(',');
+          return { name: name.trim(), address: address.trim() };
+        } else {
+          return { name: `Wallet${index + 1}`, address: line };
+        }
       });
 
     const CMC_API_KEY = '41cde24f-9803-4d8d-9cbb-2f932374d372';
