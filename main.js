@@ -24,7 +24,7 @@ const networks = {
   },
   POLYGON: {
     symbol: 'POL',
-    rpcUrl: 'https://polygon-rpc.com/',
+    rpcUrl: 'https://rpc-mainnet.matic.quiknode.pro',
   },
   OPTIMISM: {
     symbol: 'ETH',
