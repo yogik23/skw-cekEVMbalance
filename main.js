@@ -138,6 +138,7 @@ async function askAddressFile() {
         { name: 'address.txt', value: 'address.txt' },
         { name: 'secondaddress.txt', value: 'secondaddress.txt' },
         { name: 'antisybil.txt', value: 'antisybil.txt' },
+        { name: '2000.txt', value: '2000.txt' },
       ],
     },
   ]);
